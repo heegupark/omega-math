@@ -1,0 +1,1 @@
+{"ast":null,"code":"require('../../middleware/db/mongoose');\n\nexport default (async (request, response) => {});","map":null,"metadata":{},"sourceType":"module"}
