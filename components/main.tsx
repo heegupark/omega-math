@@ -1,5 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import Start from './start';
+import Play from './play';
 
-export default function Main(props: any) {
-  return <></>;
+export default function Main() {
+  const [view, setView] = useState('start' as any);
+  return (
+    <>
+      {view === 'start' ? (
+        <Start setView={setView} />
+      ) : (
+        <Play setView={setView} />
+      )}
+    </>
+  );
 }

@@ -24,6 +24,10 @@ export default function IndexPage() {
           type="image/png"
           href="../static/images/o-logo.png"
         />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet"
+        ></link>
       </Head>
     </>
   );
