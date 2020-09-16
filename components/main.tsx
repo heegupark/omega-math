@@ -14,6 +14,7 @@ export default function Main() {
     case 'play':
       element = (
         <Play
+          mode={mode}
           setIsNewHighscore={setIsNewHighscore}
           setView={setView}
           setNewscore={setNewscore}
@@ -32,7 +33,7 @@ export default function Main() {
       );
       break;
     default:
-      element = <Home setView={setView} />;
+      element = <Home setView={setView} setMode={setMode} />;
   }
   return <>{element}</>;
 }

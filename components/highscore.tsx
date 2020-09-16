@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Button, Stack, Box, Input } from '@chakra-ui/core';
+import {
+  Flex,
+  Button,
+  Stack,
+  Box,
+  Input,
+  Collapse,
+  Divider,
+} from '@chakra-ui/core';
 
 export default function Highscore(props: any) {
   const [username, setUsername] = useState('');
   const [highscores, setHighscores] = useState(new Array(10));
+  const [show, setShow] = useState(true);
+  const [message, setMessage] = useState('');
 
   const handleSave = () => {
-    // props.setView('home');
     addHighscore(props.newScore, username, props.mode);
   };
 
   useEffect(() => {
-    getHighscores('add');
+    getHighscores(props.mode);
   }, []);
 
-  const getHighscores = (mode: string) => {
+  const getHighscores = (mode: String) => {
     fetch(`/api/gethighscores`, {
       method: 'POST',
       headers: {
@@ -27,7 +36,13 @@ export default function Highscore(props: any) {
       .then((res) => res.json())
       .then((data: any) => {
         if (data.success) {
-          setHighscores(data.data);
+          if (data.data.length > 0) {
+            setMessage('');
+            setHighscores(data.data);
+          } else {
+            setMessage('no data found');
+          }
+          setShow(true);
         }
       })
       .catch((err) => {
@@ -37,7 +52,7 @@ export default function Highscore(props: any) {
       });
   };
 
-  const addHighscore = (score: number, username: string, mode: string) => {
+  const addHighscore = (score: Number, username: String, mode: String) => {
     fetch(`/api/addhighscore`, {
       method: 'POST',
       headers: {
@@ -69,6 +84,13 @@ export default function Highscore(props: any) {
     ).getDate()}/${new Date(date).getFullYear()}`;
   };
 
+  const handleView = (mode: String) => {
+    setShow(false);
+    setHighscores([]);
+    getHighscores(mode);
+    // setShow(false);
+  };
+
   return (
     <>
       <Flex width={['100%']} height={['100vh']} align="center" justify="center">
@@ -79,7 +101,7 @@ export default function Highscore(props: any) {
           border="5px solid gold"
           borderRadius="10px"
         >
-          <Stack spacing={5} height="600px">
+          <Stack spacing={2} height="600px" width="400px">
             <Box
               height="35px"
               textAlign="center"
@@ -88,58 +110,163 @@ export default function Highscore(props: any) {
             >
               Highscore
             </Box>
+            <Flex
+              align="center"
+              justify="space-between"
+              direction="row"
+              pb={3}
+              borderBottom="3px solid gold"
+            >
+              <Button
+                width="75px"
+                textAlign="center"
+                variant="ghost"
+                size="sm"
+                m={1}
+                onClick={() => handleView('add')}
+                _hover={{ border: 'none', color: 'grey' }}
+                _focus={{
+                  outline: 'none',
+                  backgroundColor: 'gold',
+                  color: 'black',
+                }}
+                _active={{ outline: 'none', color: 'gold' }}
+              >
+                add
+              </Button>
+              <Button
+                width="75px"
+                textAlign="center"
+                variant="ghost"
+                size="sm"
+                m={1}
+                onClick={() => handleView('subtract')}
+                _hover={{ border: 'none', color: 'grey' }}
+                _focus={{
+                  outline: 'none',
+                  backgroundColor: 'gold',
+                  color: 'black',
+                }}
+                _active={{ outline: 'none', color: 'gold' }}
+              >
+                subtract
+              </Button>
+              <Button
+                width="75px"
+                textAlign="center"
+                variant="ghost"
+                size="sm"
+                m={1}
+                onClick={() => handleView('multiply')}
+                _hover={{ border: 'none', color: 'grey' }}
+                _focus={{
+                  outline: 'none',
+                  backgroundColor: 'gold',
+                  color: 'black',
+                }}
+                _active={{ outline: 'none', color: 'gold' }}
+              >
+                multiply
+              </Button>
+              <Button
+                width="75px"
+                textAlign="center"
+                variant="ghost"
+                size="sm"
+                m={1}
+                onClick={() => handleView('divide')}
+                _hover={{ border: 'none', color: 'grey' }}
+                _focus={{
+                  outline: 'none',
+                  backgroundColor: 'gold',
+                  color: 'black',
+                }}
+                _active={{ outline: 'none', color: 'gold' }}
+              >
+                divide
+              </Button>
+            </Flex>
             <Box height="485px">
-              {props.isNewHighscore && (
-                <Flex
-                  align="center"
-                  justify="space-evenly"
-                  direction="row"
-                  p={2}
-                >
-                  <Box width="100px" textAlign="center">
-                    {props.newScore}
-                  </Box>
-                  <Input
-                    autoFocus
-                    width="150px"
-                    variant="unstyled"
-                    textAlign="center"
-                    mx={5}
-                    maxLength={8}
-                    borderBottom="1px solid white"
-                    value={username}
-                    onKeyDown={(e: any) => {
-                      if (
-                        e.key === 'Enter' &&
-                        e.target.value.trim().length > 0
-                      ) {
-                        handleSave();
-                      }
-                    }}
-                    onChange={(e: any) => setUsername(e.target.value.trim())}
-                  />
-                  <Box>{convertDate(new Date())}</Box>
-                </Flex>
-              )}
-              {highscores.map((highscore: any) => {
-                return (
+              <Flex align="center" justify="space-evenly" direction="row" p={2}>
+                <Box width="75px" textAlign="center">
+                  score
+                </Box>
+                <Box width="120px" textAlign="center" mx={5}>
+                  username
+                </Box>
+                <Box width="150px" textAlign="center">
+                  date
+                </Box>
+              </Flex>
+              <Collapse mt={4} isOpen={show}>
+                {props.isNewHighscore && (
                   <Flex
-                    key={highscore._id}
                     align="center"
                     justify="space-evenly"
                     direction="row"
                     p={2}
                   >
-                    <Box width="100px" textAlign="center">
-                      {highscore.score}
+                    <Box width="75px" textAlign="center">
+                      {props.newScore}
                     </Box>
-                    <Box mx={5} width="150px" textAlign="center">
-                      {highscore.username}
+                    <Input
+                      autoFocus
+                      width="120px"
+                      variant="unstyled"
+                      textAlign="center"
+                      mx={5}
+                      maxLength={8}
+                      borderBottom="1px solid white"
+                      value={username}
+                      onKeyDown={(e: any) => {
+                        if (
+                          e.key === 'Enter' &&
+                          e.target.value.trim().length > 0
+                        ) {
+                          handleSave();
+                        }
+                      }}
+                      onChange={(e: any) => setUsername(e.target.value.trim())}
+                    />
+                    <Box width="150px" textAlign="center">
+                      {convertDate(new Date())}
                     </Box>
-                    <Box>{convertDate(highscore.createdAt)}</Box>
                   </Flex>
-                );
-              })}
+                )}
+                {highscores.length > 0
+                  ? highscores.map((highscore: any, index: Number) => {
+                      if (props.isNewHighScore && index > 9) return;
+                      return (
+                        <Flex
+                          key={highscore._id}
+                          align="center"
+                          justify="space-evenly"
+                          direction="row"
+                          p={2}
+                        >
+                          <Box width="75px" textAlign="center">
+                            {highscore.score}
+                          </Box>
+                          <Box mx={5} width="120px" textAlign="center">
+                            {highscore.username}
+                          </Box>
+                          <Box width="150px" textAlign="center">
+                            {convertDate(highscore.createdAt)}
+                          </Box>
+                        </Flex>
+                      );
+                    })
+                  : !props.isNewHighscore && (
+                      <Flex
+                        align="center"
+                        justify="center"
+                        direction="column"
+                        p={2}
+                      >
+                        <Box textAlign="center">{message}</Box>
+                      </Flex>
+                    )}
+              </Collapse>
             </Box>
             <Flex
               align="center"
@@ -159,7 +286,10 @@ export default function Highscore(props: any) {
                 </Button>
               )}
               <Button
-                onClick={() => props.setView('home')}
+                onClick={() => {
+                  props.setIsNewHighscore(false);
+                  props.setView('home');
+                }}
                 variant="ghost"
                 color="black"
                 _hover={{ border: 'none', color: 'grey' }}
