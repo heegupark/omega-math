@@ -11,7 +11,7 @@ const scoreboardSchema: Schema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    owner: {
+    username: {
       type: String,
       required: true,
       trim: true,

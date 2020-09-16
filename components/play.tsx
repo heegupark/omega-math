@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Flex, Button, Box, Text, Stack, Input } from '@chakra-ui/core';
 import { BiHomeAlt } from 'react-icons/bi';
 import { useToast } from '@chakra-ui/core';
+import CountUp from 'react-countup';
 
 export default function Play(props: any) {
   const [number1, setNumber1] = useState(1);
@@ -9,6 +10,8 @@ export default function Play(props: any) {
   const [level, setLevel] = useState(1);
   const [input, setInput] = useState('');
   const [answer, setAnswer] = useState(0);
+  const [score, setScore] = useState(0);
+  const [highscore, setHighscore] = useState(0);
   const toast = useToast();
 
   const generateNumbers = () => {
@@ -48,21 +51,12 @@ export default function Play(props: any) {
         render: () => (
           <Box
             m={3}
-            color="blue"
+            color="red.500"
             p={3}
-            border="1px solid red"
+            // border="1px solid red"
             borderRadius="5px"
           >
             wrong
-          </Box>
-        ),
-      });
-      toast({
-        position: 'bottom',
-        duration: 2000,
-        render: () => (
-          <Box m={3} color="white" p={3} borderRadius="5px">
-            {`Your input was ${tempInput}`}
           </Box>
         ),
       });
@@ -74,24 +68,18 @@ export default function Play(props: any) {
         render: () => (
           <Box
             m={3}
-            color="white"
+            color="green.500"
             p={3}
-            border="1px solid gold"
+            // border="1px solid gold"
             borderRadius="5px"
           >
             correct
           </Box>
         ),
       });
-      toast({
-        position: 'bottom',
-        duration: 2000,
-        render: () => (
-          <Box m={3} color="white" p={3} bg="info.500" borderRadius="5px">
-            {`Your input was ${tempInput}`}
-          </Box>
-        ),
-      });
+      const newScore = score + 10;
+      setScore(newScore);
+      if (newScore > highscore) setHighscore(newScore);
       setLevel(level + 1);
       setInput('');
       generateNumbers();
@@ -100,7 +88,7 @@ export default function Play(props: any) {
 
   return (
     <>
-      <Flex width={['100%']} align="center" justify="space-evenly">
+      <Flex width={['100%']} align="center" justify="space-between">
         <Flex align="center" justify="center" direction="column">
           <Box m="2">
             <Button
@@ -116,32 +104,44 @@ export default function Play(props: any) {
             </Button>
           </Box>
         </Flex>
-        <Flex align="center" justify="center" direction="column">
+        {/* <Flex align="center" justify="center" direction="column">
           <Box m="2" textAlign="center" fontSize="12px">
             Score
           </Box>
           <Box fontSize="22px" textAlign="center">
-            1234
+            {score}
           </Box>
-        </Flex>
+        </Flex> */}
         <Flex align="center" justify="center" direction="column">
           <Box m="2" textAlign="center" fontSize="12px">
             Highscore
           </Box>
           <Box fontSize="22px" textAlign="center">
-            1234
+            {highscore}
           </Box>
         </Flex>
       </Flex>
       <Flex width={['100%']} height={['100%']} align="center" justify="center">
         <Flex align="center" justify="center">
           <Stack spacing={20}>
-            <Flex m={10} align="center" justify="center" direction="column">
+            {/* <Flex m={10} align="center" justify="center" direction="column">
               <Box fontSize="12px" color="yellow" textAlign="center">
                 level
               </Box>
               <Box fontSize="22px" color="yellow" textAlign="center">
                 {level}
+              </Box>
+            </Flex> */}
+            <Flex align="center" justify="center" direction="column">
+              <Box m="2" textAlign="center" fontSize="12px">
+                Score
+              </Box>
+              <Box fontSize="22px" textAlign="center">
+                <CountUp
+                  start={score > 0 ? score - 10 : 0}
+                  end={score}
+                  duration={1}
+                />
               </Box>
             </Flex>
             <Flex align="center" justify="center" direction="row">
