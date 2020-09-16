@@ -15,6 +15,28 @@ body {
   color: white;
 }
 
+.bounce {
+  animation: bounce-anim 1s ease;
+}
+
+@keyframes bounce-anim {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 @media (max-resolution: 1dppx) and (max-width: 1024px) and (max-height: 1366px) {
 }
 

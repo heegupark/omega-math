@@ -7,6 +7,11 @@ export interface IScoreboard extends Document {
 const scoreboardSchema: Schema = new mongoose.Schema(
   {
     score: {
+      type: Number,
+      required: true,
+      trim: true,
+    },
+    mode: {
       type: String,
       required: true,
       trim: true,

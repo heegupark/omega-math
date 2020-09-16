@@ -3,6 +3,14 @@ import { Flex, Button, Box, Text, Stack, Input } from '@chakra-ui/core';
 import { BiHomeAlt } from 'react-icons/bi';
 import { useToast } from '@chakra-ui/core';
 import CountUp from 'react-countup';
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  useDisclosure,
+} from '@chakra-ui/core';
 
 export default function Play(props: any) {
   const [number1, setNumber1] = useState(1);
@@ -12,22 +20,29 @@ export default function Play(props: any) {
   const [answer, setAnswer] = useState(0);
   const [score, setScore] = useState(0);
   const [highscore, setHighscore] = useState(0);
+  const [isResetting, setIsResetting] = useState(false);
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const generateNumbers = () => {
+    setIsResetting(false);
     const num1 = Math.floor(Math.random() * level * 2 + 1);
     const num2 = Math.floor(Math.random() * (level + 1) * 2 + 1);
     setNumber1(num1);
     setNumber2(num2);
     setAnswer(num1 + num2);
+    setIsResetting(true);
   };
 
   const handleKeyDown = (e: any) => {
     if (Number(e.key) >= 0 && Number(e.key) <= 9) {
-      console.log(e.key);
       handleChange(e);
     }
   };
+
+  useEffect(() => {
+    getHighscore('add');
+  }, []);
 
   useEffect(() => {
     generateNumbers();
@@ -40,6 +55,7 @@ export default function Play(props: any) {
       window.removeEventListener('keydown', handleKeyDown);
     };
   });
+
   const handleChange = (e: any) => {
     const tempInput = Number(input.concat(e.key));
     if (tempInput.toString().length < answer.toString().length) {
@@ -79,10 +95,48 @@ export default function Play(props: any) {
       });
       const newScore = score + 10;
       setScore(newScore);
-      if (newScore > highscore) setHighscore(newScore);
+      // if (newScore > highscore) setHighscore(newScore);
       setLevel(level + 1);
       setInput('');
       generateNumbers();
+    }
+  };
+
+  const getHighscore = (mode: string) => {
+    fetch(`/api/gethighscore`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        mode,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data: any) => {
+        if (data.success) {
+          setHighscore(data.data.score);
+        }
+      })
+      .catch((err) => {
+        console.error(
+          `Something wrong happened while getting messages:${err.message}`
+        );
+      });
+  };
+
+  const handleHomeBtnClick = () => {
+    onOpen();
+  };
+
+  const handleGoHome = () => {
+    if (score > highscore) {
+      props.setIsNewHighscore(true);
+      props.setNewscore(score);
+      props.setView('highscore');
+      // addHighscore();
+    } else {
+      props.setView('home');
     }
   };
 
@@ -98,7 +152,7 @@ export default function Play(props: any) {
               _hover={{ color: 'white' }}
               _active={{ bg: 'none' }}
               _focus={{ outline: 'none' }}
-              onClick={() => props.setView('start')}
+              onClick={() => handleHomeBtnClick()}
             >
               <BiHomeAlt />
             </Button>
@@ -137,23 +191,27 @@ export default function Play(props: any) {
                 Score
               </Box>
               <Box fontSize="22px" textAlign="center">
-                <CountUp
-                  start={score > 0 ? score - 10 : 0}
-                  end={score}
-                  duration={1}
-                />
+                {isResetting && (
+                  <Box className="bounce">
+                    <CountUp
+                      start={score > 0 ? score - 10 : 0}
+                      end={score}
+                      duration={1}
+                    />
+                  </Box>
+                )}
               </Box>
             </Flex>
             <Flex align="center" justify="center" direction="row">
               <Stack isInline>
                 <Box width="100px" textAlign="center" fontSize="40px">
-                  {number1}
+                  {isResetting && <Box className="bounce"> {number1}</Box>}
                 </Box>
                 <Box width="100px" textAlign="center" fontSize="40px">
                   +
                 </Box>
                 <Box width="100px" textAlign="center" fontSize="40px">
-                  {number2}
+                  {isResetting && <Box className="bounce"> {number2}</Box>}
                 </Box>
                 <Box width="100px" textAlign="center" fontSize="40px">
                   =
@@ -173,6 +231,43 @@ export default function Play(props: any) {
             </Flex>
           </Stack>
         </Flex>
+        <Modal isCentered isOpen={isOpen} onClose={onClose} closeOnEsc>
+          <ModalContent
+            border="5px solid gold"
+            backgroundColor="black"
+            borderRadius="10px"
+            height="200px"
+            opacity={1}
+          >
+            <ModalBody m={10} textAlign="center">
+              Do you want to quit?
+            </ModalBody>
+            <ModalFooter backgroundColor="gold" width="100%" textAlign="center">
+              <Button
+                variant="unstyled"
+                m="auto"
+                size="sm"
+                color="black"
+                onClick={() => handleGoHome()}
+                _focus={{ outline: 'none' }}
+                _hover={{ color: 'grey' }}
+              >
+                Yes
+              </Button>
+              <Button
+                variant="unstyled"
+                m="auto"
+                size="sm"
+                color="black"
+                onClick={onClose}
+                _focus={{ outline: 'none' }}
+                _hover={{ color: 'grey' }}
+              >
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Flex>
     </>
   );
