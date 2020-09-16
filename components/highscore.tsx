@@ -101,7 +101,7 @@ export default function Highscore(props: any) {
           border="5px solid gold"
           borderRadius="10px"
         >
-          <Stack spacing={2} height="600px" width="400px">
+          <Stack spacing={2} height="600px" maxWidth="350px">
             <Box
               height="35px"
               textAlign="center"
