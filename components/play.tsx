@@ -448,7 +448,8 @@ export default function Play(props: any) {
                 variant="unstyled"
                 textAlign="center"
                 fontSize="32px"
-                type="number"
+                // type="number"
+                pattern="[0-9]*"
                 value={input}
                 onChange={(e: any) => {}}
               />
