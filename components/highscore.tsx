@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Flex,
-  Button,
-  Stack,
-  Box,
-  Input,
-  Collapse,
-  Divider,
-} from '@chakra-ui/core';
+import { Flex, Button, Stack, Box, Input, Collapse } from '@chakra-ui/core';
 
 export default function Highscore(props: any) {
   const [username, setUsername] = useState('');
@@ -90,7 +82,6 @@ export default function Highscore(props: any) {
     getHighscores(mode);
     // setShow(false);
   };
-
   return (
     <>
       <Flex width={['100%']} height={['100vh']} align="center" justify="center">
@@ -101,7 +92,7 @@ export default function Highscore(props: any) {
           border="5px solid gold"
           borderRadius="10px"
         >
-          <Stack spacing={2} height="600px" maxWidth="350px">
+          <Stack spacing={2} height="600px" maxWidth="360px">
             <Box
               height="35px"
               textAlign="center"

@@ -210,6 +210,7 @@ export default function Play(props: any) {
 
   const handleHomeBtnClick = () => {
     setIsActive(false);
+    setModalCategory('gohome');
     onOpen();
   };
 
@@ -343,23 +344,19 @@ export default function Play(props: any) {
       modalElement = (
         <>
           <ModalBody m={10} textAlign="center">
-            <Flex
-              align="center"
-              justify="space-evenly"
-              direction="row"
+            <Button
+              variant="ghost"
+              size="sm"
+              m={5}
+              color="black"
+              width="100px"
               backgroundColor="gold"
+              onClick={() => play()}
+              _focus={{ outline: 'none' }}
+              _hover={{ color: 'grey' }}
             >
-              <Button
-                variant="ghost"
-                size="sm"
-                color="black"
-                onClick={() => play()}
-                _focus={{ outline: 'none' }}
-                _hover={{ color: 'grey' }}
-              >
-                Start
-              </Button>
-            </Flex>
+              Start
+            </Button>
           </ModalBody>
         </>
       );

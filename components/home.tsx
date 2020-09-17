@@ -70,7 +70,7 @@ export default function Home(props: any) {
                 border="5px solid gold"
                 borderRadius="10px"
               >
-                <Stack spacing={5} height="600px" width="400px">
+                <Stack spacing={5} height="600px" width="360px">
                   <Box
                     height="35px"
                     textAlign="center"
@@ -113,7 +113,7 @@ export default function Home(props: any) {
                         _hover={{
                           border: '1px solid blue',
                           backgroundImage:
-                            'url(../../static/images/math-ss-add-001.gif)',
+                            'url(../../static/images/math-ss-subtract-001.gif)',
                           backgroundSize: '100%',
                           color: 'black',
                           cursor: 'pointer',
@@ -137,7 +137,7 @@ export default function Home(props: any) {
                         _hover={{
                           border: '1px solid blue',
                           backgroundImage:
-                            'url(../../static/images/math-ss-add-001.gif)',
+                            'url(../../static/images/math-ss-multiply-001.gif)',
                           backgroundSize: '100%',
                           color: 'black',
                           cursor: 'pointer',
@@ -161,7 +161,7 @@ export default function Home(props: any) {
                         _hover={{
                           border: '1px solid blue',
                           backgroundImage:
-                            'url(../../static/images/math-ss-add-001.gif)',
+                            'url(../../static/images/math-ss-divide-001.gif)',
                           backgroundSize: '100%',
                           color: 'black',
                           cursor: 'pointer',
