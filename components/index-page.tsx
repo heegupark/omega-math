@@ -16,7 +16,10 @@ export default function IndexPage() {
         <meta property="og:title" content="o-math" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://math.heegu.net/" />
-        <meta property="og:image" content="../static/images/math-ss-001.gif" />
+        <meta
+          property="og:image"
+          content="../static/images/math-ss-add-001.gif"
+        />
         <meta property="og:description" content="Ultimate Math!" />
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
         <link
