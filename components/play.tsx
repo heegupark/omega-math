@@ -442,15 +442,18 @@ export default function Play(props: any) {
                 </Box>
               </Stack>
             </Flex>
-            <Flex align="center" justify="center" direction="row">
+            <Flex align="center" justify="center" direction="column">
+              <Box fontSize="10px">Yout answer here</Box>
               <Input
                 autoFocus
                 variant="unstyled"
                 textAlign="center"
                 fontSize="32px"
-                // type="number"
                 pattern="[0-9]*"
                 value={input}
+                borderBottom="1px double white"
+                borderRadius="0px"
+                width="100px"
                 onChange={(e: any) => {}}
               />
             </Flex>
