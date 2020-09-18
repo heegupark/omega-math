@@ -1,7 +1,7 @@
 module.exports =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
-/******/ 	var installedModules = require('../ssr-module-cache.js');
+/******/ 	var installedModules = require('../../ssr-module-cache.js');
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -88,52 +88,114 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 0:
+/***/ 3:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__("cha2");
+module.exports = __webpack_require__("Q6cW");
 
 
 /***/ }),
 
-/***/ "cDcd":
+/***/ "FiKB":
 /***/ (function(module, exports) {
 
-module.exports = require("react");
+module.exports = require("mongoose");
 
 /***/ }),
 
-/***/ "cha2":
+/***/ "OEIS":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("FiKB");
+/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mongoose__WEBPACK_IMPORTED_MODULE_0__);
+
+const scoreboardSchema = new mongoose__WEBPACK_IMPORTED_MODULE_0___default.a.Schema({
+  score: {
+    type: Number,
+    required: true,
+    trim: true
+  },
+  mode: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  username: {
+    type: String,
+    required: true,
+    trim: true
+  }
+}, {
+  timestamps: true
+});
+const Scoreboard = mongoose__WEBPACK_IMPORTED_MODULE_0___default.a.models.Scoreboard || mongoose__WEBPACK_IMPORTED_MODULE_0___default.a.model('Scoreboard', scoreboardSchema);
+/* harmony default export */ __webpack_exports__["a"] = (Scoreboard);
+
+/***/ }),
+
+/***/ "Q6cW":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MyApp; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("cDcd");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _static_styles_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("jJbl");
-/* harmony import */ var _static_styles_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_static_styles_css__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _middleware_models_scoreboard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("OEIS");
 
-var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
-function MyApp({
-  Component,
-  pageProps
-}) {
-  return __jsx(Component, pageProps);
-}
+__webpack_require__("UDab");
+
+/* harmony default export */ __webpack_exports__["default"] = (async (request, response) => {
+  const {
+    mode
+  } = request.body;
+
+  try {
+    const scoreboard = await _middleware_models_scoreboard__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"].find({
+      mode
+    }).sort({
+      score: -1
+    }).limit(10);
+
+    if (!scoreboard) {
+      return response.status(404).json({
+        success: false,
+        message: 'no scoreboard data'
+      });
+    }
+
+    return response.status(200).json({
+      success: true,
+      data: scoreboard
+    });
+  } catch (e) {
+    return response.status(500).json({
+      success: false,
+      message: 'failed to get scoreboard data'
+    });
+  }
+});
 
 /***/ }),
 
-/***/ "jJbl":
-/***/ (function(module, exports) {
+/***/ "UDab":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("FiKB");
+/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mongoose__WEBPACK_IMPORTED_MODULE_0__);
 
+mongoose__WEBPACK_IMPORTED_MODULE_0___default.a.connect(process.env.MONGODB_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false
+});
 
 /***/ })
 

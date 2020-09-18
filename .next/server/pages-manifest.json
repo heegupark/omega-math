@@ -1,7 +1,10 @@
 {
   "/_app": "pages/_app.js",
+  "/api/addhighscore": "pages/api/addhighscore.js",
+  "/api/gethighscore": "pages/api/gethighscore.js",
+  "/api/gethighscores": "pages/api/gethighscores.js",
+  "/": "pages/index.html",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/api/gethighscore": "pages/api/gethighscore.js",
-  "/": "pages/index.js"
+  "/404": "pages/404.html"
 }
