@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, KeyboardEvent } from 'react';
 import { Flex, Button, Stack, Box, Input, Collapse } from '@chakra-ui/core';
+import IHighScores from './interfaces/ihighscores';
+import IHighscoreProps from './interfaces/ihighscoreprops';
+import IHighScore from './interfaces/ihighscore';
+import IScoreBoard from './interfaces/iscoreboard';
 
-export default function Highscore(props: any) {
+export default function Highscore(props: IHighscoreProps) {
   const [username, setUsername] = useState('');
   const [highscores, setHighscores] = useState(new Array(10));
   const [show, setShow] = useState(true);
@@ -26,7 +30,7 @@ export default function Highscore(props: any) {
       }),
     })
       .then((res) => res.json())
-      .then((data: any) => {
+      .then((data: IHighScores) => {
         if (data.success) {
           if (data.data.length > 0) {
             setMessage('');
@@ -57,7 +61,7 @@ export default function Highscore(props: any) {
       }),
     })
       .then((res) => res.json())
-      .then((data: any) => {
+      .then((data: IHighScores) => {
         if (data.success) {
           setHighscores(data.data);
           props.setIsNewHighscore(false);
@@ -209,15 +213,17 @@ export default function Highscore(props: any) {
                       maxLength={8}
                       borderBottom="1px solid white"
                       value={username}
-                      onKeyDown={(e: any) => {
+                      onKeyDown={(e: KeyboardEvent) => {
                         if (
                           e.key === 'Enter' &&
-                          e.target.value.trim().length > 0
+                          (e.target as HTMLInputElement).value.trim().length > 0
                         ) {
                           handleSave();
                         }
                       }}
-                      onChange={(e: any) => setUsername(e.target.value.trim())}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setUsername(e.target.value.trim())
+                      }
                     />
                     <Box width="150px" textAlign="center">
                       {convertDate(new Date())}
@@ -225,8 +231,8 @@ export default function Highscore(props: any) {
                   </Flex>
                 )}
                 {highscores.length > 0
-                  ? highscores.map((highscore: any, index: Number) => {
-                      if (props.isNewHighScore && index > 9) return;
+                  ? highscores.map((highscore: IScoreBoard, index: Number) => {
+                      if (props.isNewHighscore && index > 9) return;
                       return (
                         <Flex
                           key={highscore._id}

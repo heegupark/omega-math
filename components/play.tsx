@@ -18,14 +18,17 @@ import {
   SliderFilledTrack,
   SliderThumb,
 } from '@chakra-ui/core';
+import IPlayProps from './interfaces/iplayprops';
+import IPrevAnswer from './interfaces/iprevanswer';
+import IHighScore from './interfaces/ihighscore';
 
-export default function Play(props: any) {
+export default function Play(props: IPlayProps) {
   const [number1, setNumber1] = useState(1);
   const [number2, setNumber2] = useState(2);
   const [level, setLevel] = useState(1);
   const [input, setInput] = useState('');
-  const [answer, setAnswer] = useState(0);
-  const [prevAnswers, setPrevAnswers] = useState([] as any);
+  const [answer, setAnswer] = useState<number>(0);
+  const [prevAnswers, setPrevAnswers] = useState<Array<IPrevAnswer>>([]);
   const [score, setScore] = useState(0);
   const [highscore, setHighscore] = useState(0);
   const [isResetting, setIsResetting] = useState(false);
@@ -98,20 +101,14 @@ export default function Play(props: any) {
     }
   }, []);
 
-  const handleKeyDown = (e: any) => {
-    if (Number(e.key) >= 0 && Number(e.key) <= 9) {
-      handleChange(e);
-    }
-  };
-
   useEffect(() => {
     getHighscore(props.mode);
   }, []);
 
   useEffect(() => {
-    let timer = null as any;
+    let timer: number = 0;
     if (isActive) {
-      timer = setInterval(() => {
+      timer = window.setInterval(() => {
         if (time > 0) setTime(time - 0.1);
         if (time <= 0) {
           setTime(0);
@@ -129,15 +126,8 @@ export default function Play(props: any) {
     generateNumbers();
   }, []);
 
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  });
-
-  const handleChange = (e: any) => {
-    const tempInput = Number(input.concat(e.key));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const tempInput = Number(e.target.value);
     if (tempInput.toString().length < answer.toString().length) {
       setInput(tempInput.toString());
     } else if (tempInput !== answer) {
@@ -155,10 +145,10 @@ export default function Play(props: any) {
         { color: 'red.500', answer: `${number1} + ${number2} ≠ ${tempInput}` },
         ...prevAnswers,
       ]);
+      setTime(time - 3);
       setInput('');
     } else {
       setIsActive(false);
-      setTime(100);
       toast({
         position: 'top',
         duration: 500,
@@ -170,6 +160,8 @@ export default function Play(props: any) {
       });
       const newScore = score + 10;
       setScore(newScore);
+      const nextLevelTime = 100 - (level - 1) * 3;
+      setTime(nextLevelTime > 30 ? nextLevelTime : 30);
       setLevel(level + 1);
       if (prevAnswers.length >= prevAnsDisplayNumber) prevAnswers.pop();
       setPrevAnswers([
@@ -196,7 +188,7 @@ export default function Play(props: any) {
       }),
     })
       .then((res) => res.json())
-      .then((data: any) => {
+      .then((data: IHighScore) => {
         if (data.success) {
           setHighscore(data.data.score);
         }
@@ -215,13 +207,7 @@ export default function Play(props: any) {
   };
 
   const handleGoHome = () => {
-    if (score > highscore) {
-      props.setIsNewHighscore(true);
-      props.setNewscore(score);
-      props.setView('highscore');
-    } else {
-      props.setView('home');
-    }
+    props.setView('home');
   };
 
   const gameOver = () => {
@@ -252,12 +238,20 @@ export default function Play(props: any) {
     setModalCategory('ready');
   };
 
+  const record = () => {
+    props.setIsNewHighscore(true);
+    props.setNewscore(score);
+    props.setView('highscore');
+  };
+
   const play = () => {
     setScore(0);
     setLevel(1);
     setTime(100);
     setIsActive(true);
     setInput('');
+    setPrevAnswers([]);
+    generateNumbers();
     onClose();
   };
 
@@ -306,7 +300,11 @@ export default function Play(props: any) {
       modalElement = (
         <>
           <ModalBody m={10} textAlign="center">
-            Game Over
+            {score > highscore ? (
+              <p>{`Congratulations! New highscore!`}</p>
+            ) : (
+              <p>Time Over</p>
+            )}
           </ModalBody>
           <Flex
             align="center"
@@ -314,28 +312,57 @@ export default function Play(props: any) {
             direction="row"
             backgroundColor="gold"
           >
-            <Button
-              variant="ghost"
-              size="sm"
-              color="black"
-              onClick={() => handleGoHome()}
-              _focus={{ outline: 'none' }}
-              _hover={{ color: 'grey' }}
-            >
-              Home
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              color="black"
-              onClick={() => {
-                restart();
-              }}
-              _focus={{ outline: 'none' }}
-              _hover={{ color: 'grey' }}
-            >
-              Restart
-            </Button>
+            {score > highscore ? (
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  color="black"
+                  onClick={() => handleGoHome()}
+                  _focus={{ outline: 'none' }}
+                  _hover={{ color: 'grey' }}
+                >
+                  Home
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  color="black"
+                  onClick={() => {
+                    record();
+                  }}
+                  _focus={{ outline: 'none' }}
+                  _hover={{ color: 'grey' }}
+                >
+                  Record
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  color="black"
+                  onClick={() => handleGoHome()}
+                  _focus={{ outline: 'none' }}
+                  _hover={{ color: 'grey' }}
+                >
+                  Home
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  color="black"
+                  onClick={() => {
+                    restart();
+                  }}
+                  _focus={{ outline: 'none' }}
+                  _hover={{ color: 'grey' }}
+                >
+                  Restart
+                </Button>
+              </>
+            )}
           </Flex>
         </>
       );
@@ -416,7 +443,7 @@ export default function Play(props: any) {
             <Flex align="center" justify="center" direction="row">
               <Slider
                 color={sliderColor}
-                defaultValue={100}
+                defaultValue={time}
                 value={time}
                 size="sm"
                 width="200px"
@@ -454,7 +481,9 @@ export default function Play(props: any) {
                 borderBottom="1px double white"
                 borderRadius="0px"
                 width="100px"
-                onChange={(e: any) => {}}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange(e)
+                }
               />
             </Flex>
             <Flex align="center" justify="center" direction="column">
@@ -464,7 +493,7 @@ export default function Play(props: any) {
                     previous answers
                   </Box>
                   <Box width="200px" textAlign="center" fontSize="24px">
-                    {prevAnswers.map((answer: any, index: number) => {
+                    {prevAnswers.map((answer: IPrevAnswer, index: number) => {
                       return (
                         <Box
                           key={index}

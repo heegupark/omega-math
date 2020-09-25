@@ -4,9 +4,9 @@ import Play from './play';
 import Highscore from './highscore';
 
 export default function Main() {
-  const [view, setView] = useState('home' as any);
-  const [mode, setMode] = useState('add' as any);
-  const [newScore, setNewscore] = useState(0 as any);
+  const [view, setView] = useState<string>('home');
+  const [mode, setMode] = useState<string>('add');
+  const [newScore, setNewscore] = useState<number>(0);
   const [isNewHighscore, setIsNewHighscore] = useState(false);
 
   let element = null;
@@ -17,6 +17,7 @@ export default function Main() {
           mode={mode}
           setIsNewHighscore={setIsNewHighscore}
           setView={setView}
+          setMode={setMode}
           setNewscore={setNewscore}
         />
       );
@@ -25,6 +26,7 @@ export default function Main() {
       element = (
         <Highscore
           mode={mode}
+          setMode={setMode}
           isNewHighscore={isNewHighscore}
           setIsNewHighscore={setIsNewHighscore}
           setView={setView}

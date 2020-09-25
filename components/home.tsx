@@ -10,8 +10,9 @@ import {
   Box,
   PseudoBox,
 } from '@chakra-ui/core';
+import IMainProps from './interfaces/imainprops';
 
-export default function Home(props: any) {
+export default function Home(props: IMainProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const play = (mode: string) => {
